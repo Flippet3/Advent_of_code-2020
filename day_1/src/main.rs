@@ -10,8 +10,8 @@ fn sort(input: Vec<i32>) -> Vec<i32> {
 
 fn find_pair(input: &Vec<i32>, goal : i32) -> Vec<i32> {
     let mut begin_i = 0;
-    let mut results = Vec::new();
     let mut end_i = input.len()-1;
+    let mut results = Vec::new();
     let mut n = 1;
     while n < 10000 {
         n += 1;
@@ -37,8 +37,8 @@ fn find_pair(input: &Vec<i32>, goal : i32) -> Vec<i32> {
 fn find_triplet(input: &Vec<i32>, goal : i32) -> Vec<i32> {
     let mut results = Vec::new();
     for i in 0..&input.len()-2 {
-        for j in 1..&input.len()-1 {
-            for k in 2..&input.len()+0 {
+        for j in i+1..&input.len()-1 {
+            for k in j+1..&input.len()+0 {
                 if &input[i] + &input[j] + &input[k] == goal {
                     results.push(input[i]);
                     results.push(input[j]);
@@ -50,6 +50,7 @@ fn find_triplet(input: &Vec<i32>, goal : i32) -> Vec<i32> {
             }
         }
     }
+    assert_eq!(&results[0] + &results[1] + &results[2], goal);
     return results;
 }
 fn main() {
@@ -59,7 +60,6 @@ fn main() {
     let sorteddata = sort(data);
     let pairs = find_pair(&sorteddata, goal);
     let triplets = find_triplet(&sorteddata, goal);
-    assert_eq!(&triplets[0] + &triplets[1] + &triplets[2], goal);
     println!("Part 1:");
     println!("Value 1: {}", &pairs[0].to_string());
     println!("Value 2: {}", &pairs[1].to_string());
