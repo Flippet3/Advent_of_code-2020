@@ -23,7 +23,6 @@ fn go_down_with_slope(data : &Vec<&str>, x_slope : usize, y_slope : usize) -> us
 
 fn main() {
     let filename = "data/input.txt";
-    // let contents = fs::read_to_string(filename).unwrap();
     let contents = fs::read_to_string(filename).expect("Could not read the file");
     let data = contents.trim().split("\r\n").collect::<Vec<_>>();
 
@@ -35,8 +34,6 @@ fn main() {
                         go_down_with_slope(&data, 7, 1) *
                         go_down_with_slope(&data, 1, 2);
 
-    println!("{:?}", data[0]);
-
-    println!("Part 1: {} valid results", part_1_result);
-    println!("Part 2: {} valid results", part_2_result);
+    println!("Part 1: {}", part_1_result);
+    println!("Part 2: {}", part_2_result);
 }
