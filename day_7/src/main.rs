@@ -41,7 +41,6 @@ fn resolve_bags(mut bags : Vec<Bag>) -> Vec<Bag> {
         let mut still_unpackable_bags = false;
         for i in 0..bags.len() {
             if !bags[i].this_unpacked {
-                // if bags[i].bags_unpacked.iter().map(|&x| x as usize).sum::<usize>() == bags[i].bags_unpacked.len() {
                 if bags[i].bags_unpacked.iter().all(|&x| x) {
                     bags[i].this_unpacked = true;
                     still_unpackable_bags = true;
@@ -54,11 +53,6 @@ fn resolve_bags(mut bags : Vec<Bag>) -> Vec<Bag> {
                             let mut content_to_push = bags[i].contents.to_vec();
                             let numbers_to_push = bags[i].numbers.to_vec();
                             let multi = bags[j].numbers[idx];
-
-                            // let mut content_to_push = vec![bags[i].this_bag.to_string()];
-                            // content_to_push.append(&mut bags[i].contents.to_vec());
-                            // let mut numbers_to_push = vec![bags[j].numbers[idx]];
-                            // numbers_to_push.append(&mut bags[i].numbers.to_vec());
 
                             bags[j].contents.append(&mut content_to_push);
                             bags[j].numbers.append(&mut numbers_to_push.iter().map(|x| x * multi).collect::<Vec<_>>());
@@ -88,9 +82,7 @@ fn main() {
     let gold_bag_index = bags.iter().position(|x| x.this_bag == (*"shiny gold").to_string()).unwrap();
     let answer_2 : usize = bags[gold_bag_index].numbers.iter().sum();
 
-    println!("{:?}", bags[gold_bag_index]);
-    // let answer_nr2 : usize = data2.iter().map(|x| count_overlap_characters(x)).sum();
-    // seatiddata.sort();
+    // println!("{:?}", bags[gold_bag_index]);
 
     println!("Part 1: {}", answers_nr);
     println!("Part 2: {}", answer_2);
