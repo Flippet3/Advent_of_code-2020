@@ -37,7 +37,6 @@ fn count_connection_ways(sort_list : &Vec<usize>) -> usize {
             }
             break;
         }
-
     }
     return perm_list[0];
 }
