@@ -1,4 +1,5 @@
 use std::fs;
+use std::time::Instant;
 
 fn get_diff_list(sort_list : &Vec<usize>) -> Vec<usize> {
     let mut step_list = vec![];
@@ -38,7 +39,6 @@ fn count_connection_ways(sort_list : &Vec<usize>) -> usize {
         }
 
     }
- 
     return perm_list[0];
 }
 
@@ -57,14 +57,12 @@ fn main() {
     data.push(data.iter().max().unwrap() + 3);
     data.sort();
 
-    // println!("{:?}", data);
-
     let (step_one, step_three) = record_adapter_steps(&data);
-    println!("{:?}", step_one);
-    println!("{:?}", step_three);
     let answer1 = step_one * step_three;
+    let now = Instant::now();
     let answer2 = count_connection_ways(&data);
-    
+    println!("{}", now.elapsed().as_secs_f64());
+
     println!("Part 1: {}", answer1);
     println!("Part 2: {}", answer2);
 }
