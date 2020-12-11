@@ -1,45 +1,7 @@
 use std::fs;
 use std::time::Instant;
-use std::cmp;
 
-fn update_seats(layout : &Vec<Vec<bool>>, seats_taken : Vec<Vec<bool>>) -> (bool, Vec<Vec<bool>>) {
-    let mut changed = false;
-    let n = layout[0].len();
-    let m = layout.len();
-    let mut new_seats_taken = seats_taken.to_vec();
-    for i_m in 0..m {
-        for i_n in 0..n {
-            if !layout[i_m][i_n] {
-                continue;
-            }
-            let mut vacinity_taken = 0;
-            for ii_m in cmp::max(0,i_m as i8-1)..cmp::min(i_m as i8+2,m as i8) {
-                for ii_n in cmp::max(0,i_n as i8-1)..cmp::min(i_n as i8+2,n as i8) {
-                    // if i_m == 0 && i_n == 2 {
-                    //     println!("ii_m {:?}", ii_m);
-                    //     println!("ii_n {:?}", ii_n);
-                    // }
-                    vacinity_taken += seats_taken[ii_m as usize][ii_n as usize] as usize;
-                }
-            }
-            let this_seat = seats_taken[i_m][i_n];
-            if this_seat == false {
-                if vacinity_taken == 0 {
-                    new_seats_taken[i_m][i_n] = true;
-                    changed = true;
-                }
-            } else {
-                if vacinity_taken >= 5 {
-                    new_seats_taken[i_m][i_n] = false;
-                    changed = true;
-                }
-            }
-        }
-    }
-    return (changed, new_seats_taken);
-}
-
-fn update_seats_2 (layout : &Vec<Vec<bool>>, seats_taken : Vec<Vec<bool>>) -> (bool, Vec<Vec<bool>>) {
+fn update_seats (layout : &Vec<Vec<bool>>, seats_taken : Vec<Vec<bool>>, seat_style_one : bool) -> (bool, Vec<Vec<bool>>) {
     let mut changed = false;
     let n = layout[0].len();
     let m = layout.len();
@@ -67,7 +29,7 @@ fn update_seats_2 (layout : &Vec<Vec<bool>>, seats_taken : Vec<Vec<bool>>) -> (b
                     if new_m < 0 || new_n < 0 || new_m >= m as i8 || new_n >= n as i8 {
                         break;
                     }
-                    if !layout[new_m as usize][new_n as usize] {
+                    if !layout[new_m as usize][new_n as usize] && !seat_style_one {
                         continue;
                     }
                     vacinity_taken += seats_taken[new_m as usize][new_n as usize] as usize;
@@ -81,7 +43,7 @@ fn update_seats_2 (layout : &Vec<Vec<bool>>, seats_taken : Vec<Vec<bool>>) -> (b
                     changed = true;
                 }
             } else {
-                if vacinity_taken >= 5 {
+                if vacinity_taken >= 5 - seat_style_one as usize {
                     new_seats_taken[i_m][i_n] = false;
                     changed = true;
                 }
@@ -97,17 +59,8 @@ fn resolve_seats(layout : &Vec<Vec<bool>>, seat_style_one : bool) -> Vec<Vec<boo
     let mut seats_taken = vec![vec![false; n]; m];
     let final_seats;
     loop {
-        // println!("{:?}", seats_taken);
-        let changed;
-        if seat_style_one {
-            let (changed_r, seats_taken_r) = update_seats(layout, seats_taken);
-            seats_taken = seats_taken_r;
-            changed = changed_r;
-        } else {
-            let (changed_r, seats_taken_r) = update_seats_2(layout, seats_taken);
-            seats_taken = seats_taken_r;
-            changed = changed_r;
-        }
+        let (changed, seats_taken_r) = update_seats(layout, seats_taken, seat_style_one);
+        seats_taken = seats_taken_r;
         if !changed {
             final_seats = seats_taken;
             break;
