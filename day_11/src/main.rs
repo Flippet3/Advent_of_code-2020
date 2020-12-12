@@ -6,21 +6,22 @@ fn update_seats (layout : &Vec<Vec<bool>>, seats_taken : Vec<Vec<bool>>, seat_st
     let n = layout[0].len();
     let m = layout.len();
     let mut new_seats_taken = seats_taken.to_vec();
+    let dirs = vec![[-1,-1],
+                    [-1,0],
+                    [-1,1],
+                    [0,-1],
+                    [0,1],
+                    [1,-1],
+                    [1,0],
+                    [1,1]];
+    let max_neighbours = if seat_style_one {4} else {5};
     for i_m in 0..m {
         for i_n in 0..n {
             if !layout[i_m][i_n] {
                 continue;
             }
             let mut vacinity_taken = 0;
-            let dirs = vec![[-1,-1],
-                            [-1,0],
-                            [-1,1],
-                            [0,-1],
-                            [0,1],
-                            [1,-1],
-                            [1,0],
-                            [1,1]];
-            for dir in dirs {
+            for dir in &dirs {
                 let mut it = 0;
                 loop {
                     it += 1;
@@ -29,10 +30,12 @@ fn update_seats (layout : &Vec<Vec<bool>>, seats_taken : Vec<Vec<bool>>, seat_st
                     if new_m < 0 || new_n < 0 || new_m >= m as i8 || new_n >= n as i8 {
                         break;
                     }
-                    if !layout[new_m as usize][new_n as usize] && !seat_style_one {
+                    let new_m = new_m as usize;
+                    let new_n = new_n as usize;
+                    if !seat_style_one && !layout[new_m][new_n] {
                         continue;
                     }
-                    vacinity_taken += seats_taken[new_m as usize][new_n as usize] as usize;
+                    vacinity_taken += seats_taken[new_m][new_n] as usize;
                     break;
                 }
             }
@@ -43,7 +46,7 @@ fn update_seats (layout : &Vec<Vec<bool>>, seats_taken : Vec<Vec<bool>>, seat_st
                     changed = true;
                 }
             } else {
-                if vacinity_taken >= 5 - seat_style_one as usize {
+                if vacinity_taken >= max_neighbours {
                     new_seats_taken[i_m][i_n] = false;
                     changed = true;
                 }
