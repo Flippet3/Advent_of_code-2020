@@ -5,25 +5,20 @@ use std::collections::HashMap;
 fn speak_game (numbers : Vec<usize>, stop_after : usize) -> usize {
     let mut number_hash = HashMap::with_capacity(10000);
     let mut last_num = numbers[numbers.len()-1];
-    let mut it = numbers.len()-1;
     let stop_after = stop_after - 1;
     for i in 0..numbers.len()-1 {
         number_hash.insert(numbers[i], i);
     }
-    loop {
-        if it == stop_after {
-            break;
-        }
+    let mut prev_it;
+    for it in numbers.len()-1..stop_after {
         // println!("{:?}", number_hash);
         if number_hash.contains_key(&last_num) {
-            let prev_it = number_hash[&last_num];
+            prev_it = number_hash[&last_num];
             number_hash.insert(last_num, it);
             last_num = it - prev_it;
-            it += 1;
         } else {
             number_hash.insert(last_num, it);
             last_num = 0;
-            it += 1;
         }
     }
     return last_num;
